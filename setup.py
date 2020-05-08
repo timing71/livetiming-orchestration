@@ -42,12 +42,12 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'livetiming-directory = livetiming.orchestration.directory:main',
-            'livetiming-dvr = livetiming.orchestration.dvr:main',
-            'livetiming-rectool = livetiming.orchestration.rectool:main',
-            'livetiming-schedule = livetiming.orchestration.schedule.__main__:main',
-            'livetiming-scheduler = livetiming.orchestration.scheduler:main',
-            'livetiming-service-manager = livetiming.orchestration.servicemanager:main',
+            'livetiming-directory = livetiming_orchestration.directory:main',
+            'livetiming-dvr = livetiming_orchestration.dvr:main',
+            'livetiming-rectool = livetiming_orchestration.rectool:main',
+            'livetiming-schedule = livetiming_orchestration.schedule.__main__:main',
+            'livetiming-scheduler = livetiming_orchestration.scheduler:main',
+            'livetiming-service-manager = livetiming_orchestration.servicemanager:main',
         ],
     }
 )
