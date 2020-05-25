@@ -9,6 +9,7 @@ WorkingDirectory=/home/james/workspace/livetiming/
 ExecStart=/home/james/workspace/livetiming/venv/bin/livetiming-scheduler
 Restart=on-failure
 EnvironmentFile=/home/james/workspace/livetiming/livetiming.env
+Environment="LANG=en_GB.UTF-8"
 
 [Install]
 WantedBy=multi-user.target
