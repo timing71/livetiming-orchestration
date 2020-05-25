@@ -84,8 +84,8 @@ class Directory(ApplicationSession):
             )
             manifest['external'] = external_extra
 
-            self.services[manifest["uuid"]] = manifest
-            self.broadcastServicesList()
+        self.services[manifest["uuid"]] = manifest
+        self.broadcastServicesList()
 
 
 configure_sentry_twisted()
