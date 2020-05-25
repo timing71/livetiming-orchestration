@@ -124,13 +124,13 @@
         },
         {
           "type": "class",
-          "classname": "livetiming.orchestration.directory.Directory",
+          "classname": "livetiming_orchestration.directory.Directory",
           "realm": "timing",
           "role": "services"
         },
         {
           "type": "class",
-          "classname": "livetiming.orchestration.dvr.DVRSession",
+          "classname": "livetiming_orchestration.dvr.DVRSession",
           "realm": "timing",
           "role": "services"
         }
