@@ -32,6 +32,7 @@ from autobahn.wamp.exception import ApplicationError
 from twisted.internet.defer import inlineCallbacks
 
 import os
+import simplejson
 
 
 LIVETIMING_SHARED_SECRET = os.environ.get('LIVETIMING_SHARED_SECRET', None)
@@ -40,16 +41,29 @@ if LIVETIMING_SHARED_SECRET is None:
     raise Exception("LIVETIMING_SHARED_SECRET not set, zombie invasion inevitable")
 
 
-USERS = {
-    'directory': {
-        'secret': LIVETIMING_SHARED_SECRET,
-        'role': u"services"
-    },
+STATIC_ROLES = {
     'services': {
         'secret': LIVETIMING_SHARED_SECRET,
-        'role': u"services"
-    },
+        'role': 'services'
+    }
 }
+
+EXTERNAL_AUTH_FILE = os.environ.get('LIVETIMING_AUTH_FILE', 'external_auth.json')
+
+
+def authenticate_external(authid):
+    try:
+        with open(EXTERNAL_AUTH_FILE, 'r') as eaf:
+            ea = simplejson.load(eaf)
+            if authid in ea:
+                return ea[authid]
+    except (FileNotFoundError, simplejson.JSONDecodeError) as e:
+        pass
+
+    raise ApplicationError(
+        'livetiming.auth.no_such_id',
+        'Could not authenticate - no such id `{}`'.format(authid)
+    )
 
 
 class AuthenticatorSession(ApplicationSession):
@@ -58,12 +72,11 @@ class AuthenticatorSession(ApplicationSession):
     def onJoin(self, details):
         def authenticate(realm, authid, details):
             self.log.info("WAMP-CRA dynamic authenticator invoked: realm='{}', authid='{}'".format(realm, authid))
-
-            if authid in USERS:
+            if authid in STATIC_ROLES:
                 # return a dictionary with authentication information ...
-                return USERS[authid]
+                return STATIC_ROLES[authid]
             else:
-                raise ApplicationError(u'com.example.no_such_user', 'could not authenticate session - no such user {}'.format(authid))
+                return authenticate_external(authid)
 
         try:
             yield self.register(authenticate, u'livetiming.authenticate')

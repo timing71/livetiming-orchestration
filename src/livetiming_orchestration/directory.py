@@ -1,11 +1,15 @@
 from autobahn.twisted.component import run
 from autobahn.twisted.wamp import ApplicationSession
-from autobahn.wamp.types import RegisterOptions, PublishOptions
+from autobahn.wamp.types import RegisterOptions, PublishOptions, SubscribeOptions
 from livetiming import configure_sentry_twisted, load_env, make_component
 from livetiming.network import Channel, Message, MessageClass, Realm, RPC, authenticatedService
 from twisted.internet import reactor, task
 from twisted.internet.defer import inlineCallbacks
 from twisted.logger import Logger
+
+
+CONTROL_SUBSCRIPTION_OPTIONS = SubscribeOptions(details=True)
+EXTERNAL_SERVICE_ROLE = 'external_service'
 
 
 @authenticatedService
@@ -45,7 +49,7 @@ class Directory(ApplicationSession):
         self.log.info("Session ready")
 
         yield self.register(self.getServicesList, RPC.GET_DIRECTORY_LISTING)
-        yield self.subscribe(self.onControlMessage, Channel.CONTROL)
+        yield self.subscribe(self.onControlMessage, Channel.CONTROL, CONTROL_SUBSCRIPTION_OPTIONS)
         self.log.debug("Subscribed to control channel")
         yield self.publish(Channel.CONTROL, Message(MessageClass.INITIALISE_DIRECTORY).serialise())
         self.log.debug("Published init message")
@@ -57,11 +61,15 @@ class Directory(ApplicationSession):
         broadcast = task.LoopingCall(self.broadcastServicesList)
         broadcast.start(60)
 
-    def onControlMessage(self, message):
+    def onControlMessage(self, message, details=None):
         msg = Message.parse(message)
         self.log.debug("Received message {msg}", msg=msg)
         if (msg.msgClass == MessageClass.SERVICE_REGISTRATION):
-            reg = msg.payload
+            reg = msg.payload.copy()
+
+            if details.publisher_authrole == EXTERNAL_SERVICE_ROLE:
+                reg['external'] = details.publisher_authid
+
             self.services[reg["uuid"]] = reg
             self.broadcastServicesList()
 

@@ -55,6 +55,25 @@
               ]
             },
             {
+              "name": "external_service",
+              "permissions": [
+                {
+                  "uri": "livetiming.",
+                  "match": "prefix",
+                  "allow": {
+                    "call": true,
+                    "register": true,
+                    "publish": true,
+                    "subscribe": true
+                  },
+                  "disclose": {
+                    "caller": true,
+                    "publisher": true
+                  }
+                }
+              ]
+            },
+            {
               "name": "anonymous",
               "permissions": [
                 {

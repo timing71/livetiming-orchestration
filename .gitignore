@@ -40,6 +40,9 @@ nosetests.xml
 venv/
 venv3/
 crossbar/.crossbar/node.key
+crossbar/key.*
+crossbar/external_auth.json
+crossbar/relay-keys.txt
 /*.json
 /*.data.p
 /.settings
