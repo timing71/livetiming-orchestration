@@ -30,10 +30,13 @@
 from autobahn.twisted.wamp import ApplicationSession
 from autobahn.wamp.exception import ApplicationError
 from twisted.internet.defer import inlineCallbacks
+from twisted.logger import Logger
 
 import os
 import simplejson
 
+
+_log = Logger()
 
 LIVETIMING_SHARED_SECRET = os.environ.get('LIVETIMING_SHARED_SECRET', None)
 
@@ -51,14 +54,19 @@ STATIC_ROLES = {
 EXTERNAL_AUTH_FILE = os.environ.get('LIVETIMING_AUTH_FILE', 'external_auth.json')
 
 
+def authenticate(realm, authid, details):
+    _log.info("WAMP-CRA dynamic authenticator invoked: realm='{}', authid='{}'".format(realm, authid))
+    if authid in STATIC_ROLES:
+        # return a dictionary with authentication information ...
+        return STATIC_ROLES[authid]
+    else:
+        return authenticate_external(authid)
+
+
 def authenticate_external(authid):
-    try:
-        with open(EXTERNAL_AUTH_FILE, 'r') as eaf:
-            ea = simplejson.load(eaf)
-            if authid in ea:
-                return ea[authid]
-    except (FileNotFoundError, simplejson.JSONDecodeError) as e:
-        pass
+    ea = read_external_file()
+    if authid in ea:
+        return ea[authid]
 
     raise ApplicationError(
         'livetiming.auth.no_such_id',
@@ -66,20 +74,29 @@ def authenticate_external(authid):
     )
 
 
+def lookup_extra(authid):
+    ea = read_external_file()
+    if authid in ea:
+        return ea[authid].get('extra', {})
+    return {}
+
+
+def read_external_file():
+    try:
+        with open(EXTERNAL_AUTH_FILE, 'r') as eaf:
+            ea = simplejson.load(eaf)
+            return ea
+    except (FileNotFoundError, simplejson.JSONDecodeError):
+        return {}
+
+
 class AuthenticatorSession(ApplicationSession):
 
     @inlineCallbacks
     def onJoin(self, details):
-        def authenticate(realm, authid, details):
-            self.log.info("WAMP-CRA dynamic authenticator invoked: realm='{}', authid='{}'".format(realm, authid))
-            if authid in STATIC_ROLES:
-                # return a dictionary with authentication information ...
-                return STATIC_ROLES[authid]
-            else:
-                return authenticate_external(authid)
-
         try:
-            yield self.register(authenticate, u'livetiming.authenticate')
+            yield self.register(authenticate, 'livetiming.authenticate')
+            yield self.register(lookup_extra, 'livetiming.authenticate.lookup')
             self.log.info("WAMP-CRA dynamic authenticator registered!")
         except Exception as e:
             self.log.error("Failed to register dynamic authenticator: {0}".format(e))

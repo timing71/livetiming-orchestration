@@ -21,7 +21,7 @@
               "permissions": [
                 {
                   "uri": "livetiming.authenticate",
-                  "match": "exact",
+                  "match": "prefix",
                   "allow": {
                     "call": false,
                     "register": true,

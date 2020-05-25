@@ -65,18 +65,27 @@ class Directory(ApplicationSession):
         msg = Message.parse(message)
         self.log.debug("Received message {msg}", msg=msg)
         if (msg.msgClass == MessageClass.SERVICE_REGISTRATION):
-            reg = msg.payload.copy()
-
-            if details.publisher_authrole == EXTERNAL_SERVICE_ROLE:
-                reg['external'] = details.publisher_authid
-
-            self.services[reg["uuid"]] = reg
-            self.broadcastServicesList()
+            self._add_manifest_entry(
+                msg.payload.copy(),
+                details
+            )
 
     def onDisconnect(self):
         self.log.info("Disconnected")
         if reactor.running:
             reactor.stop()
+
+    @inlineCallbacks
+    def _add_manifest_entry(self, manifest, details):
+        if details.publisher_authrole == EXTERNAL_SERVICE_ROLE:
+            external_extra = yield self.call(
+                'livetiming.authenticate.lookup',
+                details.publisher_authid
+            )
+            manifest['external'] = external_extra
+
+            self.services[manifest["uuid"]] = manifest
+            self.broadcastServicesList()
 
 
 configure_sentry_twisted()
