@@ -3,7 +3,7 @@ from autobahn.twisted.wamp import ApplicationSession
 from autobahn.wamp.types import PublishOptions
 from collections import defaultdict
 from livetiming import load_env, sentry, make_component
-from livetiming.orchestration import servicemanager
+from livetiming_orchestration import servicemanager
 from livetiming.network import Realm, RPC, Channel, Message, MessageClass, authenticatedService
 from threading import Lock
 from twisted.internet import reactor, task
