@@ -88,11 +88,19 @@ class Event(object):
             else:
                 print("Incorrect event format: {}".format(summary))
 
-    def serialize(self):
+    def serialize(self, apply_masquerade=False):
+
+        service_class = self.service
+
+        if apply_masquerade and '--masquerade' in self.serviceArgs:
+            m_idx = self.serviceArgs.index('--masquerade') + 1
+            if len(self.serviceArgs) > m_idx:
+                service_class = self.serviceArgs[m_idx]
+
         return {
             "id": self.uid,
             "name": self.name,
-            "service": self.service,
+            "service": service_class,
             "startTime": time.mktime(self.startDate.utctimetuple()),
             "hidden": self.is_hidden()
         }
@@ -192,7 +200,7 @@ class Scheduler(object):
     def listSchedule(self):
         now = datetime.datetime.now(pytz.utc)
         upcoming = [j for j in list(self.events.values()) if j.startDate > now and j.uid not in self.runningEvents]
-        return [j.serialize() for j in upcoming]
+        return [j.serialize(True) for j in upcoming]
 
     def updateSchedule(self):
         with self.lock:
