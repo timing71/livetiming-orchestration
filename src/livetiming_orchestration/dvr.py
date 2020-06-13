@@ -61,7 +61,7 @@ class DirectoryTimingRecorder(TimingRecorder):
     def __init__(self, recordFile):
         timestamped_recfile = "{}_{}".format(recordFile, time.strftime("%Y%m%d%H%M%S"))
         deduped_recfile, _ = dedupe(recordFile)
-        super(DirectoryTimingRecorder, self).__init__(deduped_recfile)
+        super(DirectoryTimingRecorder, self).__init__(deduped_recfile, False)
         os.mkdir(deduped_recfile)
         self._finalised = False
 
