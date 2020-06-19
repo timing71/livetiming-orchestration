@@ -1,5 +1,5 @@
-from livetiming.orchestration.schedule import get_events
-from livetiming.orchestration.scheduler import EVT_SERVICE_REGEX
+from livetiming_orchestration.schedule import get_events
+from livetiming_orchestration.scheduler import EVT_SERVICE_REGEX
 from livetiming.service import get_plugin_source
 
 import importlib
