@@ -27,6 +27,7 @@ TAG_TO_SERVICE_CLASS = {
     'F2': 'f2',
     'Formula E': 'formulae',
     'GT4A': 'tsl',
+    'GTWC America': 'tsl',
     'GP3 Series': 'f3',
     'F3': 'f3',
     'IMSA': 'imsa',
@@ -45,6 +46,7 @@ _MAPPED_TAGS = {
     '24H': '24H Series',
     'ALMS': 'Asian Le Mans Series',
     'GT4A': 'GT4 America',
+    'GTWC America': 'World Challenge USA',
     'TCA': 'TC America',
     'WC': 'World Challenge USA',
     'W': 'W Series'
@@ -58,6 +60,7 @@ _DEFAULT_ARGS = {
     'Blancpain GT': '--tz ?',
     'F1': '--hidden',
     'GT4A': '--session ?',
+    'GTWC America': '--session ?',
     'Formula E': '--hidden',
     'TCA': '--session ?',
     'VLN': '--tz 2',
