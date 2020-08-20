@@ -102,24 +102,29 @@ def run(service, args):
     def maybe_update_event(event, scheduled):
         if event['updated'] > scheduled['updated']:
             if not args.dry_run:
-                update_event(
-                    service,
-                    {
-                        'id': scheduled['id'],
-                        'start': {
-                            'dateTime': event['start'].strftime("%Y-%m-%dT%H:%M:%S%z")
-                        },
-                        'end': {
-                            'dateTime': event['end'].strftime("%Y-%m-%dT%H:%M:%S%z")
-                        },
-                        'summary': scheduled['originalSummary'],
-                        'description': 'Automatically updated by livetiming-schedule assist',
-                        'extendedProperties': {
-                            'private': {
-                                'correlationId': scheduled['correlationId']
-                            }
+
+                event_body = {
+                    'id': scheduled['id'],
+                    'start': {
+                        'dateTime': event['start'].strftime("%Y-%m-%dT%H:%M:%S%z")
+                    },
+                    'end': {
+                        'dateTime': event['end'].strftime("%Y-%m-%dT%H:%M:%S%z")
+                    },
+                    'summary': scheduled['originalSummary'],
+                    'description': 'Automatically updated by livetiming-schedule assist'
+                }
+
+                if scheduled.get('correlationId') is not None:
+                    event_body['extendedProperties'] = {
+                        'private': {
+                            'correlationId': scheduled['correlationId']
                         }
                     }
+
+                update_event(
+                    service,
+                    event_body
                 )
                 print('Updated: {}'.format(event['summary']))
             else:
