@@ -17,7 +17,6 @@ TAG_TO_SERVICE_CLASS = {
     '24H TCES': '24h_series',
     '24H': '24h_series',
     'ALMS': 'aslms',
-    'Blancpain GT': 'blancpain',
     'CTSC': 'imsa',
     'European Le Mans': 'elms',
     'ELMS': 'elms',
@@ -28,6 +27,7 @@ TAG_TO_SERVICE_CLASS = {
     'Formula E': 'formulae',
     'GT4A': 'tsl',
     'GTWC America': 'tsl',
+    'GTWC Europe': 'gtwc',
     'GP3 Series': 'f3',
     'F3': 'f3',
     'IMSA': 'imsa',
@@ -57,10 +57,10 @@ _MAPPED_TAGS = {
 # interactively. Services with a wildcard will not be scheduled
 # non-interactively.
 _DEFAULT_ARGS = {
-    'Blancpain GT': '--tz ?',
     'F1': '--hidden',
     'GT4A': '--session ?',
     'GTWC America': '--session ?',
+    'GTWC Europe': '--tz ?',
     'Formula E': '--hidden',
     'TCA': '--session ?',
     'VLN': '--tz 2',
