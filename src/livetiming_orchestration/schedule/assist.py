@@ -33,6 +33,7 @@ TAG_TO_SERVICE_CLASS = {
     'IMSA': 'imsa',
     'IndyCar': 'indycar',
     'Michelin Le Mans Cup': 'lemanscup',
+    'NASCAR': 'nascar',
     'V8 Supercars': 'v8sc',
     'Supercars': 'v8sc',
     'TCA': 'tsl',
@@ -48,6 +49,7 @@ _MAPPED_TAGS = {
     'GT4A': 'GT4 America',
     'GTWC America': 'World Challenge USA',
     'TCA': 'TC America',
+    'NASCAR': 'NASCAR Cup',
     'WC': 'World Challenge USA',
     'W': 'W Series'
 }
@@ -62,6 +64,7 @@ _DEFAULT_ARGS = {
     'GTWC America': '--session ?',
     'GTWC Europe': '--tz ?',
     'Formula E': '--hidden',
+    'IMSA': '--hidden',
     'TCA': '--session ?',
     'VLN': '--tz 2',
     'W': '-e 31',
