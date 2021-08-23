@@ -38,7 +38,7 @@ TAG_TO_SERVICE_CLASS = {
     'Supercars': 'v8sc',
     'TCA': 'tsl',
     'VLN': 'vln',
-    'W': 'wige',
+    'W': 'wseries',
     'WC': 'tsl',
     'WEC': 'wec'
 }
@@ -67,7 +67,7 @@ _DEFAULT_ARGS = {
     'IMSA': '--hidden',
     'TCA': '--session ?',
     'VLN': '--tz 2',
-    'W': '-e 31',
+    'W': '--event ? --session ?',
     'WC': '--session ?',
     'WEC': '--hidden --hh live-api.hhtiming.com:24688'
 }
